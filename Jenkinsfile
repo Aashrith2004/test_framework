@@ -36,6 +36,11 @@ pipeline {
                 '''
             }
         }
+        stage('Run Tests') {
+            steps {
+                bat 'venv\\Scripts\\pytest -n 3 --dist=loadscope --junitxml=reports/junit.xml --alluredir=allure-results'
+            }
+        }
         stage('Allure Report') {
             steps {
                 powershell '''
@@ -53,7 +58,6 @@ pipeline {
     post {
         always {
             junit 'reports/junit.xml'
-            allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
         }
     }
 }
