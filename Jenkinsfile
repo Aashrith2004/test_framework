@@ -49,17 +49,3 @@ pipeline {
         }
     }
 }
-```
-
-### How it all fits together
-```
-docker-compose up -d
-        │
-        ▼
-  selenium-hub (port 4444)
-        │
-        ├── chrome-node-1 (2 sessions)
-        ├── chrome-node-2 (2 sessions)
-        └── chrome-node-3 (2 sessions)
-                             
-Total = 6 parallel slots → matches -n 3 pytest workers
