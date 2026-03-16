@@ -42,27 +42,23 @@ pipeline {
             }
         }
         stage('Allure Report') {
-         steps {
-        powershell '''
-            $port = 4040
-            $allure = "C:\\Users\\Aashrith\\scoop\\shims\\allure.cmd"
-            
-            # Run allure serve in background so Jenkins does not hang
-            Start-Process -FilePath $allure -ArgumentList "serve allure-results --port $port" -WindowStyle Hidden
-            
-            Start-Sleep -Seconds 5
-            Write-Host "========================================="
-            Write-Host "Allure Report is available at:"
-            Write-Host "http://127.0.0.1:$port"
-            Write-Host "========================================="
-        '''
+            steps {
+                powershell '''
+                    $port = 4040
+                    $allure = "C:\\Users\\Aashrith\\scoop\\shims\\allure.cmd"
+                    Start-Process -FilePath $allure -ArgumentList "serve allure-results --port $port" -WindowStyle Hidden
+                    Start-Sleep -Seconds 5
+                    Write-Host "========================================="
+                    Write-Host "Allure Report is available at:"
+                    Write-Host "http://127.0.0.1:$port"
+                    Write-Host "========================================="
+                '''
+            }
+        }
     }
-}
-
     post {
         always {
             junit 'reports/junit.xml'
         }
     }
-}
 }
