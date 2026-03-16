@@ -40,7 +40,6 @@ pipeline {
     }
     post {
         always {
-            bat 'docker-compose -f docker/docker-compose.yml down'
             junit 'reports/junit.xml'
             allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
         }
