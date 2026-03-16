@@ -4,7 +4,7 @@ from pages.project_page import ProjectsPage
 from utils.logger import get_logger
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+import time
 logger = get_logger()
 
 
@@ -24,7 +24,8 @@ def test_project_creation_flow(driver):
 
     projects_page = ProjectsPage(driver)
 
-    project_name = "Automation Test Project"
+    project_name = f"Automation Test Project {int(time.time())}"
+    
 
     logger.info("Creating new project")
 
