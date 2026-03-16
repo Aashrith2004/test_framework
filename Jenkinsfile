@@ -36,14 +36,17 @@ pipeline {
                 '''
             }
         }
-        stage('Run Tests') {
+        stage('Allure Report') {
             steps {
-                bat 'venv\\Scripts\\pytest -n 3 --dist=loadscope --junitxml=reports/junit.xml --alluredir=allure-results'
-            }
-        }
-        stage('Generate Allure Report') {
-            steps {
-                bat 'allure generate allure-results -o allure-report --clean'
+                powershell '''
+                    $port = 4040
+                    Start-Process -NoNewWindow -FilePath "C:\\allure\\bin\\allure.bat" -ArgumentList "serve allure-results --port $port"
+                    Start-Sleep -Seconds 5
+                    Write-Host "========================================="
+                    Write-Host "Allure Report is available at:"
+                    Write-Host "http://localhost:$port"
+                    Write-Host "========================================="
+                '''
             }
         }
     }
