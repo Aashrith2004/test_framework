@@ -5,14 +5,13 @@ from pages.base_page import BasePage
 import time
 
 class TasksPage(BasePage):
-    # More specific - finds Edit button in first row
-    FIRST_EDIT_BUTTON = (By.XPATH, "//table//tbody//tr[1]//button[contains(.,'Edit')]")
+    FIRST_EDIT_BUTTON = (By.XPATH, "//table//tbody//tr[not(.//span[contains(@class,'badge') and text()='done'])][1]//button[contains(.,'Edit')]")
     STATUS_DROPDOWN   = (By.XPATH, "//label[text()='Status']/following::select[1]")
-    # More specific - finds Save button inside modal only
-    SAVE_BUTTON       = (By.XPATH, "//div[contains(@class,'modal-footer')]//button[contains(.,'Save')]")
-    STATUS_BADGE      = (By.XPATH, "//table//tbody//tr[1]//span[contains(@class,'badge')]")
-    # Wait for STATUS_DROPDOWN to disappear after save
+    SAVE_BUTTON       = (By.ID, "tasks-save-btn")  # fixed - using ID
     MODAL_BACKDROP    = (By.XPATH, "//div[contains(@class,'modal-backdrop')]")
+
+    def get_first_non_done_row_badge(self):
+        return (By.XPATH, "//table//tbody//tr[not(.//span[contains(@class,'badge') and text()='done'])][1]//span[contains(@class,'badge bg-')]")
 
     def click_first_edit(self):
         self.wait.until(
@@ -35,8 +34,9 @@ class TasksPage(BasePage):
             EC.element_to_be_clickable(self.SAVE_BUTTON)
         )
         self.driver.execute_script("arguments[0].scrollIntoView(true);", save_btn)
-        save_btn.click()
-        # Wait for backdrop to disappear = modal fully closed
+        time.sleep(0.5)
+        # Use JS click to avoid any overlay issues
+        self.driver.execute_script("arguments[0].click();", save_btn)
         self.wait.until(
             EC.invisibility_of_element_located(self.MODAL_BACKDROP)
         )
@@ -44,6 +44,6 @@ class TasksPage(BasePage):
 
     def get_status(self):
         badge = self.wait.until(
-            EC.presence_of_element_located(self.STATUS_BADGE)
+            EC.presence_of_element_located(self.get_first_non_done_row_badge())
         )
         return badge.text
