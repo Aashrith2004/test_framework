@@ -15,8 +15,8 @@ def test_alerts_handling(driver):
     login_page = LoginPage(driver)
     login_page.login_as_admin("admin@example.com", "Admin@123")
 
-    WebDriverWait(driver, 10).until(
-        EC.url_contains("dashboard")
+    WebDriverWait(driver, 20).until(
+        EC.visibility_of_element_located((By.XPATH, "//h2[contains(., 'Dashboard')]"))
     )
 
     dashboard = DashboardPage(driver)
@@ -26,28 +26,24 @@ def test_alerts_handling(driver):
 
     # ---------- Simple Alert ----------
     logger.info("Triggering simple alert")
-
     driver.find_element(By.ID, "btn-simple-alert").click()
-
     alert = driver.switch_to.alert
     alert.accept()
 
     # ---------- Confirm Dialog ----------
     logger.info("Triggering confirm dialog")
-
     driver.find_element(By.ID, "btn-confirm").click()
-
     confirm = driver.switch_to.alert
     confirm.dismiss()
 
     # ---------- Prompt Dialog ----------
     logger.info("Triggering prompt dialog")
-
     driver.find_element(By.ID, "btn-prompt").click()
-
     prompt = driver.switch_to.alert
     prompt.send_keys("Automation Test")
     prompt.accept()
+
     prompt_result = driver.find_element(By.ID, "prompt-result").text
     assert "Automation Test" in prompt_result
+
     logger.info("TC07 passed")

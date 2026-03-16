@@ -15,8 +15,8 @@ def test_frames_tabs_windows(driver):
     login_page = LoginPage(driver)
     login_page.login_as_admin("admin@example.com", "Admin@123")
 
-    WebDriverWait(driver, 10).until(
-        EC.url_contains("dashboard")
+    WebDriverWait(driver, 20).until(
+        EC.visibility_of_element_located((By.XPATH, "//h2[contains(., 'Dashboard')]"))
     )
 
     dashboard = DashboardPage(driver)
@@ -29,7 +29,9 @@ def test_frames_tabs_windows(driver):
     # -------- IFRAME --------
     logger.info("Switching to iframe")
 
-    iframe = driver.find_element(By.ID, "test-iframe")
+    iframe = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "test-iframe"))
+    )
     driver.switch_to.frame(iframe)
 
     assert driver.title is not None
