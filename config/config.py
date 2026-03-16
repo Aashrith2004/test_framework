@@ -1,5 +1,5 @@
 BASE_URL = "https://react-frontend-api-testing.vercel.app/login"
 BROWSER = "chrome"
-EXECUTION_MODE = "local"
+EXECUTION_MODE = "remote"
 GRID_URL = "http://localhost:4444/wd/hub"
 HEADLESS_MODE = False
